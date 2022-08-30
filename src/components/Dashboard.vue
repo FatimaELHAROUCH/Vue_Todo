@@ -2,11 +2,11 @@
 
     <div class="container">
 
-        <h2 class="text-center mt-5"> List of tasks </h2>
+        <h2 class="text-center mt-5"> List of Tasks </h2>
 
         <!-- inputs -->
 
-        <div class="d-flex mt-5 ">
+        <div class="d-flex mt-5 center">
             <input type="text" v-model="name" placeholder="name of the task" class="form-control"/>
             <input type="text" v-model="status" placeholder="status of task" class="form-control"/>
             <input type="text" v-model="owner" placeholder="owner of the task" class="form-control"/>
@@ -34,12 +34,12 @@
                     <td>{{task.status}}</td>
                     <td>{{task.lastUpdated}}</td>
                     <td>
-                        <div @click="editTask">
+                        <div @click="editTask(index)">
                             <span class="fa fa-pen"></span>
                         </div>
                     </td>
                     <td>
-                        <div @click="removeTask">
+                        <div @click="removeTask(index)">
                             <span class="fa fa-trash"></span>
                         </div>
                     </td>
@@ -55,7 +55,6 @@
 
     export default {
         name: "DashboardPage",
-
         data() {
             return {
                 tasks : [{name: "SLEEP", owner: "FATIMA", status: "Running", lastUpdated: "08:00:00"}],
@@ -63,31 +62,33 @@
                 owner: "",
                 status: "",
                 lastUpdated: "",
-                taskUpdate: false
+                taskUpdated: null
             }
         },
 
         methods: {
 
             addTask() {
-                if (!this.taskUpdate){
+                if (!this.taskUpdated){
                     this.tasks.push({name : this.name, owner: this.owner, status: this.status, lastUpdated: this.lastUpdated});
                 }
                 else {
                     console.log("Task Update");
+                    if (this.name || this.owner || this.status || this.lastUpdated) {
+                        console.log("editTask", this.name)
+                        this.tasks.splice(this.taskIndex, 1, {"name" : this.name, "status" : this.status, "owner" : this.owner, "lastUpdated" : this.lastUpdated});
+                    }
                 }
             },
 
             editTask(index) {
-                console.log("EDIT TASK", index)
-                this.taskUpdate = true;
-                this.tasks[index].name = this.name;
-
-                // this.name = this.tasks[index].name;
-                // this.name !== this.tasks[index].name ? this.tasks[index].name = this.name : this.tasks[index].name;
-                // this.owner !== this.tasks[index].owner ? this.tasks[index].owner = this.owner : this.tasks[index].owner;
-                // this.owner !== this.tasks[index].owner ? this.tasks[index].owner = this.owner : this.tasks[index].owner;
-                // this.owner !== this.tasks[index].owner ? this.tasks[index].owner = this.owner : this.tasks[index].owner
+                // fill the inputs with the selected tasks values
+                // update the task Updated value 
+                this.taskUpdated = true;
+                this.name = this.tasks[index].name;
+                this.owner = this.tasks[index].owner;
+                this.status = this.tasks[index].status;
+                this.lastUpdated = this.tasks[index].lastUpdated;
             },
 
             removeTask(index) {
@@ -101,3 +102,13 @@
 
 
 </script>
+
+<style>
+    .center {
+        margin: auto;
+        position: relative;
+        width: 100%;
+        border: 3px solid rgb(11, 12, 11);
+        
+    }
+</style>
