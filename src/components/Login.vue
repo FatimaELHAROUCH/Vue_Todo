@@ -8,10 +8,11 @@
 
     <div class="register">
 
-        <input type="text" class="form-control" placeholder="Enter your email address"/>
-        <input type="text" class="form-control" placeholder="Enter your password"/>
+        <input type="text" v-model="email"      class="form-control"   placeholder="Enter your email address"/>
+        <input type="text" v-model="password"   class="form-control"   placeholder="Enter your password"/>
 
         <button @click="login" type="submit" class="register">Login</button>
+
         <p>
             <router-link to="signUp">Sign Up</router-link>
         </p>
@@ -25,23 +26,35 @@
 
 <script>
 
-    export default {
-        name: 'loginPage',
-        data() {
-            return {
-                email : '',
-                password: ''
-            }
+import axios from "axios";
 
-        },
+export default {
+    name: 'loginPage',
+    data() {
+        return {
+            email : '',
+            password: ''
+        }
 
-        methods : {
-            async login() {
-                console.log("LOGGED IN");
-                this.$router.push({name: 'dashboard'})
+    },
+
+    methods : {
+        async login() {
+            
+            console.log("LOGGED IN");
+            let response = await axios.get("http://localhost:3000/users?email="+this.email+"&password="+this.password);
+            if (response.data.length !== 0 && response.status === 200){
+                console.log("Authentication succeeded", response.data);
+                localStorage.setItem('user', JSON.stringify(response.data))
+                this.$router.push({name :'dashboard'});
             }
+            else {
+                console.log("Authentication failed", response.data);
+            }
+            // this.$router.push({name: 'dashboard'});
         }
     }
+}
 
 </script>
 <style>
