@@ -3,86 +3,75 @@
 
         <div class="container">
 
-            <h2 class="text-center mt-5"> Tasks Dashboard </h2>
+            <h2 class="text-center mt-5"> Add a new task </h2>
 
             <!-- inputs -->
-            <form>
-                <div class="row">
+
+            <form class="taskForm">
+                <div class="form-group row mt-5">
+                    <label for="nameInput" class="col-sm-2 col-form-label"> Name </label>
                     <div class="col">
-                        <input type="text" v-model="name"           placeholder="Name of the task" class="form-control"/>
-                    </div>
-                    <div class="col">
-                        <input type="text" v-model="status"         placeholder="Status of task" class="form-control"/>
-                    </div>
-                </div>
-                <div class="row mt-5">
-                    <div class="col">
-                        <input type="text" v-model="owner"          placeholder="Owner of the task" class="form-control"/>
-                    </div>
-                    <div class="col">
-                        <input type="text" v-model="lastUpdated"    placeholder="Last updated" class="form-control"/>
+                        <input type="text" v-model="name"   id= "nameInput"    placeholder="Name of the task" class="form-control"/>
                     </div>
                 </div>
 
-                <button v-on:submit.prevent="addTask" class="btn btn-info rounded-0 mt-5 mb-5">SUBMIT</button>
-
+                <div class="form-group row mt-5">
+                    <label for="statusInput" class="col-sm-2 col-form-label"> Status </label>
+                    <div class="col">
+                        <input type="text" v-model="status" readonly="true"  id= "statusInput" placeholder="Status of task" class="form-control"/>
+                    </div>
+                </div>
                 
-            </form>
+                <div class="form-group row mt-5">
+                    <label for="ownerInput" class="col-sm-2 col-form-label"> Owner </label>
+                    <div class="col">
+                        <input type="text" id= "ownerInput" v-model="owner"          placeholder="Owner of the task" class="form-control"/>
+                    </div>
+                </div>
+                <div class="form-group row mt-5">
+                    <label for="lastUpdateInput" class="col-sm-2 col-form-label"> Created At </label>
+                    <div class="col">
+                        <input type="text" id= "lastUpdateInput"  readonly="true" v-model="lastUpdated"    placeholder="Created At" class="form-control"/>
+                    </div>
+                </div>
 
+                <button v-on:click="addTask" class="btn btn-info rounded-0 mt-5 mb-5">SUBMIT</button>
+            </form>
+            
         </div>
     </div>
 
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions } from 'vuex';
 
 export default {
-    name: "AddTask",
+    name: "AddTaskForm",
     data() {
         return {
-            allTasks : [],
-            tasks : [],
             name: "",
             owner: "",
-            lastUpdated: "",
-            taskUpdated: null,
-            count: 0,
+            lastUpdated: new Date(),
+            status : "To Do", 
             progressRate:20
 
         }
     },
 
 
-    computed: {
-
-        ...mapGetters(["getCount", "getAllTasks"]),
-
-        status: function () {
-            console.log("status computing");
-            return this.count ==  2 ? "Completed" : this.count ===  0 ? "To do" : "In progress";
-        }
-    },
-
-    mounted() {
-        console.log("mounted");
-        this.tasks = this.getAllTasks;
-    },
-
     methods: {
 
-        ...mapActions(["updateCount", "updateAllTasks"]),
+        ...mapActions(["addTaskAction"]),
 
         addTask() {
-
-            if (!this.taskUpdated){
-                this.updateAllTasks({name : this.name, owner: this.owner, status: this.status, lastUpdated: this.lastUpdated, progress: this.progress, todo: true, done: false, progressRate:0})
-                return true;
-            }
-
-            else if (this.name || this.owner || this.status || this.lastUpdated) {
-                this.allTasks.splice(this.taskIndex, 1, {"name" : this.name, "status" : this.status, "owner" : this.owner, "lastUpdated" : this.lastUpdated});
-            }
+            this.addTaskAction({name : this.name, owner: this.owner, status: this.status, lastUpdated: this.lastUpdated, progress: this.progress, todo: true, done: false, progressRate:0})
+           
+            this.$router.push({name :'dashboard'});
+          
+            // else if (this.name || this.owner || this.status || this.lastUpdated) {
+            //     this.allTasks.splice(this.taskIndex, 1, {"name" : this.name, "status" : this.status, "owner" : this.owner, "lastUpdated" : this.lastUpdated});
+            // }
         }
     }
 }
@@ -95,5 +84,10 @@ export default {
         margin: auto;
         position: relative;
         width: 100%;       
+    }
+
+    .taskForm {
+        width: 500px;
+        margin: auto;
     }
 </style>

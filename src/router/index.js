@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import LoginPage from '../components/Login.vue';
 import DashboardPage from '../components/Dashboard.vue';
 import SignUp from '../components/SignUp.vue';
+import AddTaskForm from '../components/AddTaskForm.vue';
 
 Vue.use(VueRouter)
 
@@ -21,6 +22,11 @@ const routes = [
       name: "signUp",
       component: SignUp,
       path: "/SignUp"
+    },
+    {
+      name: "addTask",
+      component: AddTaskForm,
+      path: "/addtask"
     }
 ]
 

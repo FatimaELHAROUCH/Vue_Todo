@@ -4,30 +4,9 @@
 
         <div class="container">
 
-            <h2 class="text-center mt-5"> Tasks Dashboard </h2>
+            <h2 class="text-center mt-5"> List of tasks </h2>
 
-            <!-- inputs -->
-            <form>
-                <div class="row">
-                    <div class="col">
-                        <input type="text" v-model="name"           placeholder="Name of the task" class="form-control"/>
-                    </div>
-                    <div class="col">
-                        <input type="text" v-model="status"         placeholder="Status of task" class="form-control"/>
-                    </div>
-                </div>
-                <div class="row mt-5">
-                    <div class="col">
-                        <input type="text" v-model="owner"          placeholder="Owner of the task" class="form-control"/>
-                    </div>
-                    <div class="col">
-                        <input type="text" v-model="lastUpdated"    placeholder="Last updated" class="form-control"/>
-                    </div>
-                </div>
-                <button v-on:click.prevent="addTask" class="btn btn-info rounded-0 mt-5 mb-5">SUBMIT</button>
-            </form>
-
-            <!-- <input type="text" v-model="filter" placeholder="Enter your filter here"/> -->
+            <input style="float:left" type="text" v-model="filter" placeholder="Enter your status filter here"/>
 
             <!-- table of tasks -->
             <table class="table mt-5">
@@ -36,7 +15,7 @@
                         <th scope="col">Name</th>
                         <th scope="col">Owner</th>
                         <th scope="col">Status</th>
-                        <th scope="col">Last updated</th>
+                        <th scope="col">Created at</th>
                         <th scope="col">Edit</th>
                         <th scope="col">Change Status</th>
                         <th scope="col">Delete</th>
@@ -77,6 +56,29 @@
                     </tr>
                 </tbody>
             </table>
+
+            <form type="submit" >
+                <div class="form-group row mt-5">
+                    <div class="col">
+                        <input type="text" v-model="name"   id= "nameInput"    placeholder="Name of the task" class="form-control"/>
+                    </div>
+                    <div class="col">
+                        <input type="text" v-model="status" readonly="true"  id= "statusInput"      placeholder="Status of task" class="form-control"/>
+                    </div>
+                    <div class="col">
+                        <input type="text" id= "ownerInput" v-model="owner"       placeholder="Owner of the task" class="form-control"/>
+                    </div>
+                    <div class="col">
+                        <input type="text" id= "lastUpdateInput"  readonly="true" v-model="lastUpdated"    placeholder="Created At" class="form-control"/>
+                    </div>
+
+
+                </div>
+                <button v-on:click.prevent="updateTask()" :disabled="!taskUpdated && !isChanged" class="btn btn-info rounded-0 mt-3 mb-5" style="width:100px">UPDATE</button>
+
+            </form>
+
+
         </div>
     </div>
 
@@ -93,11 +95,12 @@ import { mapActions, mapGetters } from 'vuex';
                 tasks : [],
                 name: "",
                 owner: "",
+                status: '',
                 lastUpdated: "",
-                taskUpdated: null,
-                count: 0,
-                progressRate:20,
-                filter: ''
+                taskUpdated: false,
+                filter: '',
+                isChanged: false,
+                taskIndex: null
 
             }
         },
@@ -106,48 +109,57 @@ import { mapActions, mapGetters } from 'vuex';
         watch: {
             filter(status) {
                 this.tasks = this.allTasks.filter(el => el.status.includes(status));
+            },
+
+            name() {
+                this.isChanged = true;
+            },
+
+            owner() {
+                this.isChanged = true; 
             }
         },   
 
         computed: {
 
-            ...mapGetters(["getCount", "getAllTasks"]),
+            ...mapGetters(["getAllTasks"])
 
-            status: function () {
-                console.log("status computing");
-                return this.count ==  2 ? "Completed" : this.count ===  0 ? "To do" : "In progress";
-            }
         },
 
         mounted() {
             console.log("CREATED");
+            this.allTasks = this.getAllTasks;
             this.tasks = this.getAllTasks;
         },
 
         methods: {
 
-            ...mapActions(["updateCount", "updateAllTasks"]),
+            ...mapActions([ "updateTaskAction"]),
 
-            addTask() {
-
-                if (!this.taskUpdated){
-                    this.updateAllTasks({name : this.name, owner: this.owner, status: this.status, lastUpdated: this.lastUpdated, progress: this.progress, todo: true, done: false, progressRate:0})
-                    return true;
+            updateTask() {
+                this.taskUpdated = true;
+                let todo = this.status === "To do" ? true : false;
+                let progress = this.status === "In Progress" ? true : false
+                let done = this.status === "Done" || this.status === "In review" ? true : false
+                if (this.isChanged) {
+                    this.updateTaskAction({
+                        index : this.taskIndex,
+                        task : {"name" : this.name, "owner" : this.owner, "status" : this.status, "lastUpdated" : this.lastUpdated, todo: todo, progress: progress, done: done}
+                    })
                 }
-
-                else if (this.name || this.owner || this.status || this.lastUpdated) {
-                    this.allTasks.splice(this.taskIndex, 1, {"name" : this.name, "status" : this.status, "owner" : this.owner, "lastUpdated" : this.lastUpdated});
-                }
+                this.taskUpdated = false;
             },
 
             editTask(index) {
                 // fill the inputs with the selected tasks values
                 // update the task Updated value 
+                console.log("FATIMA", this.tasks[index])
                 this.taskUpdated = true;
                 this.name = this.tasks[index].name;
                 this.owner = this.tasks[index].owner;
                 this.status = this.tasks[index].status;
                 this.lastUpdated = this.tasks[index].lastUpdated;
+                this.taskIndex = index;
             },
 
             removeTask(index) {
@@ -155,13 +167,16 @@ import { mapActions, mapGetters } from 'vuex';
             },
 
             changeStatus(index) {
-                this.tasks[index].todo = false;
-                this.tasks[index].progress = false;
-                this.tasks[index].done = false;
-                this.count === 2 ? this.count = 0 : this.count += 1;
-                this.tasks[index].status = this.count ===  2 ? "Completed" : this.count ===  0 ? "To do" : "In progress";
-                if (this.count === 0) this.tasks[index].todo = true;
-                else if (this.count === 1) this.tasks[index].progress = true;
+                
+                if (this.tasks[index].status  !== "In review") {
+                    this.tasks[index].todo = false;
+                    this.tasks[index].progress = false;
+                    this.tasks[index].done = false;
+                    this.tasks[index].status = this.tasks[index].status ===  "To do" ? "In progress" : this.tasks[index].status ===  "In progress" ? "Completed" : "In review";
+                }
+                
+                if (this.tasks[index].status ===  "to do") this.tasks[index].todo = true;
+                else if (this.tasks[index].status ===  "In progress") this.tasks[index].progress = true;
                 else this.tasks[index].done = true;
             }
         }
@@ -175,5 +190,9 @@ import { mapActions, mapGetters } from 'vuex';
         margin: auto;
         position: relative;
         width: 100%;       
+    }
+
+    .buttonUpdate{
+
     }
 </style>

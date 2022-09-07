@@ -7,7 +7,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
 
     state: {
-        count: 0,
+
         allTasks : [
             {name: "Learn Vue", owner: "FATIMA", status: "To do", lastUpdated: "09:00:00", todo: true, progress: false, done: false, progressRate:0},
             {name: "Learn Jest", owner: "FATIMA", status: "In Progress", lastUpdated: "12:00:00", todo: false, progress: true, done: false, progressRate:10},
@@ -19,9 +19,6 @@ export default new Vuex.Store({
     },
 
     getters: {
-        getCount : function(state){
-            return state.count;
-        },
 
         getAllTasks : function(state) {
             return state.allTasks;
@@ -30,23 +27,25 @@ export default new Vuex.Store({
     },
 
     mutations: {
-        UPDATE_COUNT: (state, payload) => {
-            state.count = payload
-        },
 
-        UPDATE_ALL_TASKS: (state, payload) => {
+        ADD_TASK: (state, payload) => {
             state.allTasks.push(payload)
         },
+
+        UPDATE_TASK: (state, payload) => {
+           (state.allTasks).splice(payload.index, 1, payload.task);
+        }
 
     },
 
     actions: {
-        updateCount: ({ commit }, payload) => {
-            commit("UPDATE_COUNT", payload)
+
+        addTaskAction: ({ commit }, payload) => {
+            commit("ADD_TASK", payload)
         },
 
-        updateAllTasks: ({ commit }, payload) => {
-            commit("UPDATE_ALL_TASKS", payload)
+        updateTaskAction: ({ commit }, payload) => {
+            commit("UPDATE_TASK", payload)
         }
     },
 
