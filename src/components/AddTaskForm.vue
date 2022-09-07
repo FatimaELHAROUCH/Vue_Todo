@@ -3,6 +3,11 @@
 
         <div class="container">
 
+            <nav>
+                <router-link to="/dashboard">Back to dashboard</router-link> |
+                <router-link to="/login">Logout</router-link>
+            </nav>
+
             <h2 class="text-center mt-5"> Add a new task </h2>
 
             <!-- inputs -->

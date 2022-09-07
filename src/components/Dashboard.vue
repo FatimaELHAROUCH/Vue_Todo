@@ -4,6 +4,11 @@
 
         <div class="container">
 
+            <nav>
+                <router-link to="/addTask">Add task</router-link> |
+                <router-link to="/login">Logout</router-link>
+            </nav>
+
             <h2 class="text-center mt-5"> List of tasks </h2>
 
             <input style="float:left" type="text" v-model="filter" placeholder="Enter your status filter here"/>
