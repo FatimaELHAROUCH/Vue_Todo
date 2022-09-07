@@ -111,12 +111,18 @@ import { mapActions, mapGetters } from 'vuex';
                 this.tasks = this.allTasks.filter(el => el.status.includes(status));
             },
 
-            name() {
-                this.isChanged = true;
+            name: function(newValue, oldValue) {
+                // If "name" ever changes.
+                if (oldValue !== newValue && oldValue !== "" && newValue !== "") {
+                    this.isChanged = true;
+                }
             },
 
-            owner() {
-                this.isChanged = true; 
+            owner: function(newValue, oldValue) {
+                // If "name" ever changes.
+                if (oldValue !== newValue && oldValue !== "" && newValue !== "") {
+                    this.isChanged = true;
+                }
             }
         },   
 
@@ -127,7 +133,7 @@ import { mapActions, mapGetters } from 'vuex';
         },
 
         mounted() {
-            console.log("CREATED");
+            console.log("dashboard of tasks is created");
             this.allTasks = this.getAllTasks;
             this.tasks = this.getAllTasks;
         },
@@ -147,14 +153,13 @@ import { mapActions, mapGetters } from 'vuex';
                         task : {"name" : this.name, "owner" : this.owner, "status" : this.status, "lastUpdated" : this.lastUpdated, todo: todo, progress: progress, done: done}
                     })
                 }
-                this.taskUpdated = false;
+
+                this.resetForm();
             },
 
             editTask(index) {
                 // fill the inputs with the selected tasks values
                 // update the task Updated value 
-                console.log("FATIMA", this.tasks[index])
-                this.taskUpdated = true;
                 this.name = this.tasks[index].name;
                 this.owner = this.tasks[index].owner;
                 this.status = this.tasks[index].status;
@@ -178,6 +183,15 @@ import { mapActions, mapGetters } from 'vuex';
                 if (this.tasks[index].status ===  "to do") this.tasks[index].todo = true;
                 else if (this.tasks[index].status ===  "In progress") this.tasks[index].progress = true;
                 else this.tasks[index].done = true;
+            },
+
+            resetForm() {
+                this.name = "";
+                this.owner = "";
+                this.status = "";
+                this.lastUpdated = "";
+                this.taskUpdated = false;
+                this.isChanged = false;
             }
         }
     }
