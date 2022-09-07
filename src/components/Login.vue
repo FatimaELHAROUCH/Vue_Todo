@@ -26,6 +26,7 @@
 
 <script>
 
+const { required, minLength, email } = require('vuelidate/lib/validators')
 import axios from "axios";
 
 export default {
@@ -38,7 +39,30 @@ export default {
 
     },
 
+    validations: {
+        email: {
+            required,
+            email,
+            minLength: minLength(4)
+        },
+        password: {
+            required,
+            minLength: minLength(6)
+        }
+    },
+
+
     methods : {
+
+        increment() {
+            this.counter ++;
+        }, 
+
+        decrement() {
+            this.counter --;
+        },
+        
+
         async login() {
             
             console.log("LOGGED IN");
@@ -51,8 +75,9 @@ export default {
             else {
                 console.log("Authentication failed", response.data);
             }
-            // this.$router.push({name: 'dashboard'});
         }
+
+
     }
 }
 

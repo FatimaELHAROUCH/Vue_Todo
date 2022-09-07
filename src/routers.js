@@ -14,12 +14,17 @@ const routes = [
     {
         name: "login",
         component: LoginPage,
-        path: "/Login"
+        path: "/login"
     },
     {
         name: "SignUp",
         component: signUp,
-        path: "/SignUp"
+        path: "/signUp"
+    },
+    {
+        name: "addTask",
+        component: AddTask,
+        path: "/addTask"
     }
 ]
 

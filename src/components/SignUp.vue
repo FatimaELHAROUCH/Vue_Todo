@@ -54,7 +54,12 @@ export default {
                 localStorage.setItem ('user', JSON.stringify(response.data))
                 this.$router.push({name: 'dashboard'})
             }
+        },
+
+        isPasswordAllowed(password) {
+            return password.length > 0 && /\d/.test(password) && /\D/.test(password);
         }
+  
     }
 }
 </script>

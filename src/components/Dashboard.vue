@@ -1,4 +1,5 @@
 <template>
+
     <div>
 
         <div class="container">
@@ -41,6 +42,7 @@
                         <th scope="col">Delete</th>
                     </tr>
                 </thead>
+
                 <tbody>
                     <tr v-for="(task, index) in tasks" :key="index">
                         <th scope="row">{{task.name}}</th>
@@ -103,10 +105,9 @@ import { mapActions, mapGetters } from 'vuex';
 
         watch: {
             filter(status) {
-                console.log("status")
                 this.tasks = this.allTasks.filter(el => el.status.includes(status));
             }
-        },
+        },   
 
         computed: {
 
