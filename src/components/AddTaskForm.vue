@@ -73,7 +73,6 @@ export default {
             this.addTaskAction({name : this.name, owner: this.owner, status: this.status, lastUpdated: this.lastUpdated, progress: this.progress, todo: true, done: false, progressRate:0})
            
             this.$router.push({name :'dashboard'});
-          
             // else if (this.name || this.owner || this.status || this.lastUpdated) {
             //     this.allTasks.splice(this.taskIndex, 1, {"name" : this.name, "status" : this.status, "owner" : this.owner, "lastUpdated" : this.lastUpdated});
             // }

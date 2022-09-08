@@ -91,6 +91,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import { required } from 'vuelidate';
 
     export default {
         name: "DashboardPage",
@@ -106,11 +107,18 @@ import { mapActions, mapGetters } from 'vuex';
                 filter: '',
                 isChanged: false,
                 taskIndex: null
-
             }
         },
-
-
+        validations() {
+            return {
+                name: { 
+                    required 
+                },
+                owner: {
+                    required
+                }
+            }
+        },
         watch: {
             filter(status) {
                 this.tasks = this.allTasks.filter(el => el.status.includes(status));
