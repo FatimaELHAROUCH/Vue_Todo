@@ -91,10 +91,11 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import { required } from 'vuelidate';
+// import { required } from 'vuelidate';
 
     export default {
         name: "DashboardPage",
+        props : ["username"],
         data() {
             return {
                 allTasks : [],
@@ -109,16 +110,16 @@ import { required } from 'vuelidate';
                 taskIndex: null
             }
         },
-        validations() {
-            return {
-                name: { 
-                    required 
-                },
-                owner: {
-                    required
-                }
-            }
-        },
+        // validations() {
+        //     return {
+        //         name: { 
+        //             required 
+        //         },
+        //         owner: {
+        //             required
+        //         }
+        //     }
+        // },
         watch: {
             filter(status) {
                 this.tasks = this.allTasks.filter(el => el.status.includes(status));
@@ -148,7 +149,7 @@ import { required } from 'vuelidate';
         mounted() {
             console.log("dashboard of tasks is created");
             this.allTasks = this.getAllTasks;
-            this.tasks = this.getAllTasks;
+            //this.tasks = this.getAllTasks;
         },
 
         methods: {
@@ -185,7 +186,7 @@ import { required } from 'vuelidate';
             },
 
             changeStatus(index) {
-                
+
                 if (this.tasks[index].status  !== "In review") {
                     this.tasks[index].todo = false;
                     this.tasks[index].progress = false;

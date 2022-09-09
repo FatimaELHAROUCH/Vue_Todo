@@ -26,10 +26,14 @@
 <script>
 
 import axios from "axios";
+import router from 'vue-router';
 
 export default {
 
     name: 'SignUp',
+    props: {
+        msg: String
+    },
     data(){
         return {
             name: '',
@@ -60,6 +64,9 @@ export default {
             return password.length > 0 && /\d/.test(password) && /\D/.test(password);
         }
   
+    },
+    components: {
+        'router-link': router
     }
 }
 </script>
