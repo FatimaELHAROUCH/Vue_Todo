@@ -19,6 +19,7 @@ describe('Hello world is  a vue instance', () => {
       const wrapper = shallowMount(HelloWorld, {
         propsData: { msg }
       })
-      expect(wrapper.isVueInstance()).toBeTruthy();
+      //expect(wrapper.isVueInstance()).toBeTruthy();
+      expect(wrapper.vm).toBeTruthy();
   })
 })

@@ -62,17 +62,21 @@
                 </tbody>
             </table>
 
-            <form type="submit" >
+            <form v-if="update" type="submit" >
+                
                 <div class="form-group row mt-5">
                     <div class="col">
                         <input type="text" v-model="name"   id= "nameInput"    placeholder="Name of the task" class="form-control"/>
                     </div>
+
                     <div class="col">
                         <input type="text" v-model="status" readonly="true"  id= "statusInput"      placeholder="Status of task" class="form-control"/>
                     </div>
+
                     <div class="col">
                         <input type="text" id= "ownerInput" v-model="owner"       placeholder="Owner of the task" class="form-control"/>
                     </div>
+
                     <div class="col">
                         <input type="text" id= "lastUpdateInput"  readonly="true" v-model="lastUpdated"    placeholder="Created At" class="form-control"/>
                     </div>
@@ -107,7 +111,8 @@ import { mapActions, mapGetters } from 'vuex';
                 taskUpdated: false,
                 filter: '',
                 isChanged: false,
-                taskIndex: null
+                taskIndex: null,
+                update : false,
             }
         },
         // validations() {
@@ -149,7 +154,7 @@ import { mapActions, mapGetters } from 'vuex';
         mounted() {
             console.log("dashboard of tasks is created");
             this.allTasks = this.getAllTasks;
-            //this.tasks = this.getAllTasks;
+            this.tasks = this.getAllTasks;
         },
 
         methods: {
@@ -179,6 +184,7 @@ import { mapActions, mapGetters } from 'vuex';
                 this.status = this.tasks[index].status;
                 this.lastUpdated = this.tasks[index].lastUpdated;
                 this.taskIndex = index;
+                this.update = true;
             },
 
             removeTask(index) {
